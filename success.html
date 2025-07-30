@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Accessorize Me</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .status-container {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+        }
+        .status-container h1 {
+            color: var(--success-color);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body class="success-page">
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Accessorize Me Logo"></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="status-container">
+            <h1>Payment Successful!</h1>
+            <p>Thank you for your purchase. Your order is being processed and you will receive a confirmation email shortly.</p>
+            <p>Your transaction ID is: <strong id="transaction-id"></strong></p>
+            <a href="index.html" class="cta-button" style="margin-top: 20px;">Continue Shopping</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Accessorize Me. Developed By Jerusha Lamsal</p>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>

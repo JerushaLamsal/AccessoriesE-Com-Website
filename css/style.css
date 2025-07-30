@@ -1,0 +1,461 @@
+/* --- Global Styles & Variables (User's Original Theme) --- */
+:root {
+    --primary-color: #3a3a3a; /* Dark grey */
+    --secondary-color: #d4af37; /* Gold-ish for accents */
+    --light-bg: #f8f8f8;
+    --text-color: #555; /* Merged from both */
+    --white-color: #fff; /* Renamed for consistency */
+    --border-color: #ddd;
+    --success-color: #28a745; /* Using a vibrant green for success */
+    --error-color: #dc3545;  /* Using a vibrant red for errors */
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Merged from both */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    background-color: var(--white-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+h1, h2, h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+/* --- Header & Navigation (User's Original Style) --- */
+header {
+    background-color: var(--white-color);
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo img {
+    height: 50px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 25px;
+}
+
+nav ul li a {
+    font-weight: 600;
+    padding: 10px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--secondary-color);
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after,
+nav ul li a.active::after {
+    width: 100%;
+}
+
+nav ul li a.active {
+    color: var(--secondary-color);
+}
+
+/* --- Cart Icon with new badge style --- */
+#cart-icon {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+    font-weight: 600;
+}
+
+#cart-icon:hover {
+    background-color: var(--secondary-color);
+}
+
+#cart-count {
+    background-color: var(--white-color);
+    color: var(--secondary-color);
+    padding: 2px 7px;
+    border-radius: 50%;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+
+/* --- Main Content Sections --- */
+main {
+    min-height: calc(100vh - 150px);
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    color: var(--primary-color);
+}
+
+/* --- Home Page Specific (User's Style) --- */
+.hero {
+    background: url('../images/hero-bg.webp') no-repeat center center/cover;
+    color: var(--white-color);
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.4);
+}
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: var(--white-color);
+}
+
+.hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.cta-button:hover {
+    background-color: #b89530;
+    transform: translateY(-2px);
+}
+
+.featured-products, .about-section {
+    padding: 40px 0;
+    text-align: center;
+}
+
+/* --- Product Listing (Merged) --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.product-card {
+    background-color: var(--white-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+.product-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.product-card h3 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    flex-grow: 1; /* Helps align buttons at the bottom */
+}
+
+.product-price {
+    font-size: 1em;
+    color: var(--text-color);
+    text-decoration: line-through;
+}
+
+/* Style for final price on both static homepage and dynamic product page */
+.product-price1, .product-card .price {
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+
+.add-to-cart-btn {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* --- Cart Page (Updated for new JS structure) --- */
+.cart-container {
+    max-width: 900px;
+    margin-top: 20px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 0;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.cart-item-details {
+    flex-grow: 1;
+}
+
+.cart-item-details h3 {
+    margin: 0;
+}
+
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-item-actions .item-quantity {
+    width: 50px;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+}
+
+.remove-item-btn {
+    background: none;
+    border: none;
+    color: var(--error-color);
+    font-size: 1.5rem; /* Larger for better clickability */
+    cursor: pointer;
+    transition: color 0.3s;
+    line-height: 1;
+}
+
+.remove-item-btn:hover {
+    color: #a72834;
+}
+
+.cart-summary {
+    margin-top: 40px;
+    background: var(--light-bg);
+    padding: 30px;
+    border-radius: 8px;
+    text-align: right;
+}
+
+.cart-summary h2 {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.cart-summary p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.cart-summary span {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* The "Pay with eSewa" button will inherit .cta-button styles */
+#checkout-btn {
+    background-color: var(--success-color);
+    margin-top: 10px;
+}
+#checkout-btn:hover {
+    background-color: #1e7e34; /* Darker green */
+}
+
+#cart-empty-msg {
+    text-align: center;
+    font-size: 1.2em;
+    color: #777;
+    padding: 50px 0;
+}
+
+
+/* --- Contact Page (User's Original Style) --- */
+.contact-form, .contact-details {
+    margin-bottom: 30px;
+}
+.contact-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.contact-form textarea { min-height: 150px; resize: vertical; }
+.contact-form button[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+.contact-form button[type="submit"]:hover { background-color: var(--secondary-color); }
+.contact-details p { font-size: 1.1em; margin-bottom: 10px; }
+.contact-details strong { color: var(--primary-color); }
+
+#map-container {
+    height: 400px; width: 100%;
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px; border-radius: 5px;
+    overflow: hidden;
+}
+#map-container iframe { width: 100%; height: 100%; border: 0; }
+
+/* --- Success & Failure Page Styles (New) --- */
+.status-container {
+    text-align: center;
+    padding: 80px 20px;
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.status-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+.success-page .status-container h1 { color: var(--success-color); }
+.failure-page .status-container h1 { color: var(--error-color); }
+
+
+/* --- Footer --- */
+footer {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+footer p { margin: 0; font-size: 0.9em; }
+
+
+/* --- Responsive Design (User's Original) --- */
+@media (max-width: 768px) {
+    header .container { flex-direction: column; align-items: center; }
+    nav ul { margin-top: 15px; justify-content: center; flex-wrap: wrap; }
+    nav ul li { margin: 5px 10px; }
+    .hero h1 { font-size: 2.2em; }
+    .hero p { font-size: 1em; }
+    .product-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    .cart-item { flex-direction: column; align-items: flex-start; }
+    .cart-item img { margin-bottom: 10px; }
+    .cart-item-actions { margin: 10px 0; }
+    .cart-summary { text-align: center; }
+    .cart-summary #checkout-btn { width: 100%; margin: 5px 0; }
+}
+
+@media (max-width: 480px) {
+    .product-grid { grid-template-columns: 1fr; }
+    .logo img { height: 40px; }
+    nav ul li a { font-size: 0.9em; }
+}
