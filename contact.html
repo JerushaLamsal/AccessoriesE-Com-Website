@@ -27,28 +27,62 @@
             <div style="display: flex; flex-wrap: wrap; gap: 30px;">
                 <div class="contact-form" style="flex: 1; min-width: 300px;">
                     <h2>Send Us a Message</h2>
-                    <form id="contact-form">
-                        <div>
-                            <label for="name">Name:</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div>
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div>
-                            <label for="message">Message:</label>
-                            <textarea id="message" name="message" rows="6" required></textarea>
-                        </div>
-                        <button type="submit" class="cta-button">Send Message</button>
-                    </form>
+                    <form id="contact-form" method="POST">
+    <input type="hidden" name="_captcha" value="false">
+    
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+    </div>
+    <button type="submit" class="cta-button">Send Message</button>
+</form>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const formData = new FormData(form);
+    const name = formData.get('name');
+
+    // Send data to FormSubmit
+    fetch('https://formsubmit.co/ajax/contactat.jerusha@gmail.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+    }).then(response => {
+        if(response.ok) {
+            // Redirect to thank you page with name in URL
+            window.location.href = `thankyou.html?name=${encodeURIComponent(name)}`;
+        } else {
+            response.json().then(data => {
+                alert(data.message || 'Oops! There was a problem submitting your form');
+            });
+        }
+    }).catch(() => {
+        alert('Oops! There was a problem submitting your form');
+    });
+});
+</script>
+
                 </div>
 
                 <div class="contact-details" style="flex: 1; min-width: 300px;">
                     <h2>Our Contact Information</h2>
                     <p><strong>Address:</strong> Gharipatan-07, Pokhara City</p>
                     <p><strong>Phone:</strong> +9779813774974</p>
-                    <p><strong>Email:</strong> jerushalamsal1@gmail.com</p>
+                    <p><strong>Email:</strong> 
+  <a href="mailto:contactat.jerusha@gmail.com">contactat.jerusha@gmail.com</a>
+</p>
+
                     <p><strong>Business Hours:</strong> Mon - Sat: 8 AM - 7 PM</p>
 
                     <h3 style="margin-top: 30px;">Find Us Here</h3>
@@ -67,5 +101,6 @@
     </footer>
 
     <script src="js/main.js"></script>
+
 </body>
 </html>
