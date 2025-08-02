@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const form = document.createElement('form');
         form.setAttribute("method", "POST");
         // Use the UAT (testing) URL. For a live site, use https://epay.esewa.com.np/epay/main
-        form.setAttribute("action", "https://uat.esewa.com.np/epay/main"); 
+        form.setAttribute("action", "https://esewa.com.np/epay/main"); 
         
         for (const key in params) {
             const hiddenField = document.createElement("input");
@@ -262,7 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         document.body.appendChild(form);
-        form.submit();
+       // form.submit();
+
+       // Simulate successful payment with fake transaction ID
+window.location.href = `success.html?oid=${transactionUUID}&refId=MOCK12345`;
+
     }
 
 
