@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Accessorize Me</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Accessorize Me Logo"></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html" id="cart-icon">Cart <span id="cart-count">0</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container checkout-container">
+            <h1 class="page-title">Review Your Order</h1>
+
+            <!-- Order Summary will be loaded here by JavaScript -->
+            <div id="order-summary-container" class="order-summary"></div>
+
+            <!-- eSewa Payment Section -->
+            <div class="payment-section">
+                <h2>Pay With eSewa</h2>
+                
+                <!-- This form will be submitted to eSewa. It's hidden from the user. -->
+                <form id="esewa-form" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" style="display: none;">
+                    <input type="text" id="amount" name="amount" required>
+                    <input type="text" id="tax_amount" name="tax_amount" value="0" required>
+                    <input type="text" id="total_amount" name="total_amount" required>
+                    <input type="text" id="transaction_uuid" name="transaction_uuid" required>
+                    <input type="text" id="product_code" name="product_code" value="EPAYTEST" required>
+                    <input type="text" id="product_service_charge" name="product_service_charge" value="0" required>
+                    <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
+                    <input type="text" id="success_url" name="success_url" required>
+                    <input type="text" id="failure_url" name="failure_url" required>
+                    <input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
+                    <input type="text" id="signature" name="signature" required>
+                </form>
+                
+                <button id="esewa-payment-button" class="cta-button esewa-button">Pay with eSewa</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Accessorize Me. Developed By Jerusha Lamsal</p>
+        </div>
+    </footer>
+    
+    <!-- CryptoJS is required by eSewa's process to generate the signature -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,277 +1,200 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Determine the current page to run page-specific logic
-    
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-    // --- PRODUCT DATA (Using Rs. for eSewa compatibility) ---
+    // --- PRODUCT DATA (Based on your index.html) ---
     const products = [
         { id: 1, name: 'Elegant Gold Necklace', price: 550, image: 'images/necklace1.jpeg' },
         { id: 2, name: 'Sparkling Diamond Earrings', price: 250, image: 'images/earrings1.jpg' },
         { id: 3, name: 'Golden Charm Bracelet', price: 620, image: 'images/bracelet1.jpg' },
-        { id: 4, name: 'Charm Beads', price: 100, image: 'images/beads1.jpg' },
+        { id: 4, name: 'Charm Beads', price: 1, image: 'images/beads1.jpg' },
         { id: 5, name: 'Golden Aesthetic Watch', price: 1200, image: 'images/watch1.jpg' },
-        { id: 6, name: 'Beautiful Rings Set', price: 400, image: 'images/rings1.webp' },
-        { id: 7, name: 'Pearl Drop Earrings', price: 350, image: 'images/earrings1.jpg' },
-        { id: 8, name: 'Silver Link Bracelet', price: 750, image: 'images/bracelet1.jpg' }
+        { id: 6, name: 'Beautiful Rings', price: 400, image: 'images/rings1.webp' }
     ];
 
-    // --- CART MANAGEMENT (Using your 'cart' key) ---
+    // --- CART MANAGEMENT ---
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    function saveCart() {
+    const saveCart = () => {
         localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartIcon();
-    }
+        updateCartCount();
+    };
+    
+    // Finds a product in the list by its card content
+    const getProductFromCard = (cardElement) => {
+        const productName = cardElement.querySelector('h3').textContent.trim();
+        return products.find(p => p.name === productName);
+    };
 
-    function updateCartIcon() {
-        const cartCountElement = document.getElementById('cart-count');
-        if (cartCountElement) {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCountElement.textContent = totalItems;
-        }
-    }
-
-    function addToCart(productId) {
+    const addToCart = (productId) => {
         const product = products.find(p => p.id === productId);
-        if (!product) return;
-
-        const cartItem = cart.find(item => item.id === productId);
-        if (cartItem) {
-            cartItem.quantity++;
-        } else {
-            cart.push({ ...product, quantity: 1 });
-        }
-        saveCart();
-        alert(`${product.name} has been added to your cart!`);
-    }
-
-    function updateQuantity(productId, quantity) {
-        const cartItem = cart.find(item => item.id === productId);
-        if (cartItem) {
-            cartItem.quantity = parseInt(quantity);
-            if (cartItem.quantity <= 0) {
-                removeFromCart(productId);
+        if (product) {
+            const cartItem = cart.find(item => item.id === productId);
+            if (cartItem) {
+                cartItem.quantity++;
             } else {
-                saveCart();
-                if (currentPage === 'cart.html') displayCartItems(); // Re-render cart page
+                cart.push({ ...product, quantity: 1 });
             }
+            saveCart();
+            alert(`${product.name} has been added to your cart!`);
         }
-    }
-
-    function removeFromCart(productId) {
+    };
+    
+    const removeFromCart = (productId) => {
         cart = cart.filter(item => item.id !== productId);
         saveCart();
-        if (currentPage === 'cart.html') displayCartItems(); // Re-render cart page
-    }
-
-    // --- Navigation Active State (Kept from your original code) ---
-    const navLinks = document.querySelectorAll('nav ul li a');
-    navLinks.forEach(link => {
-        // A small fix to make index.html matching more robust
-        const linkHref = link.getAttribute('href').split('/').pop();
-        if (linkHref === currentPage) {
-            link.classList.add('active');
+        renderCartPage(); // Refresh the cart view
+    };
+    
+    const updateCartCount = () => {
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) {
+            cartCountEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
         }
-    });
+    };
 
-    // ===============================================
-    // --- PAGE SPECIFIC LOGIC ---
-    // ===============================================
+    const calculateTotal = () => {
+        return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
 
-    // --- Product Page Logic (products.html) ---
-    if (currentPage === 'products.html') {
+
+    // --- DYNAMIC PAGE RENDERING ---
+    const renderProductsPage = () => {
         const productGrid = document.getElementById('product-grid');
-        if (productGrid) {
-            productGrid.innerHTML = ''; // Clear for dynamic rendering
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.innerHTML = `
+        if (!productGrid) return;
+        
+        productGrid.innerHTML = '';
+        products.forEach(product => {
+            productGrid.innerHTML += `
+                <div class="product-card">
                     <img src="${product.image}" alt="${product.name}">
                     <h3>${product.name}</h3>
-                    <p class="price">Rs. ${product.price.toFixed(2)}</p>
-                    <button class="add-to-cart-btn" data-product-id="${product.id}">Add to Cart</button>
-                `;
-                productGrid.appendChild(productCard);
-            });
+                    <p class="product-price1">Rs.${product.price}</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            `;
+        });
+    };
 
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = parseInt(e.target.getAttribute('data-product-id'));
-                    addToCart(productId);
-                });
-            });
+    const renderCartPage = () => {
+        const itemsContainer = document.getElementById('cart-items-container');
+        const summaryContainer = document.getElementById('cart-summary-container');
+        if (!itemsContainer || !summaryContainer) return;
+
+        itemsContainer.innerHTML = '';
+        if (cart.length === 0) {
+            itemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+            summaryContainer.innerHTML = '';
+            return;
         }
-    }
 
-    // --- Cart Page Logic (cart.html) - MERGED & ENHANCED ---
-    if (currentPage === 'cart.html') {
-        const cartItemsContainer = document.getElementById('cart-items-container');
-        const cartSummaryContainer = document.getElementById('cart-summary-container');
+        cart.forEach(item => {
+            itemsContainer.innerHTML += `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" style="width: 60px; border-radius: 4px;">
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <p>Quantity: ${item.quantity}</p>
+                    </div>
+                    <p>Rs. ${item.price * item.quantity}</p>
+                    <button class="remove-btn" data-id="${item.id}">Remove</button>
+                </div>
+            `;
+        });
 
-        function displayCartItems() {
-            if (!cartItemsContainer || !cartSummaryContainer) return;
+        summaryContainer.innerHTML = `
+            <h3>Total: Rs. ${calculateTotal()}</h3>
+            <a href="checkout.html" class="cta-button">Proceed to Checkout</a>
+        `;
+    };
+    
+    const renderCheckoutPage = () => {
+        const summaryContainer = document.getElementById('order-summary-container');
+        const esewaButton = document.getElementById('esewa-payment-button');
+        if (!summaryContainer || !esewaButton) return;
 
-            cartItemsContainer.innerHTML = '';
-            cartSummaryContainer.innerHTML = '';
+        if (cart.length === 0) {
+            summaryContainer.innerHTML = '<p>Your cart is empty. Please add items before checking out.</p>';
+            esewaButton.style.display = 'none';
+            return;
+        }
+        
+        summaryContainer.innerHTML = '<h4>Order Summary:</h4><ul>';
+        cart.forEach(item => {
+            summaryContainer.innerHTML += `<li>${item.name} (x${item.quantity})</li>`;
+        });
+        summaryContainer.innerHTML += `</ul><hr><p class="total-amount">Total to Pay: Rs. ${calculateTotal()}</p>`;
+    };
 
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p id="cart-empty-msg">Your cart is empty. <a href="products.html">Shop now!</a></p>';
+    // --- ESEWA PAYMENT INTEGRATION (Following Documentation) ---
+    const handleEsewaPayment = () => {
+        const esewaButton = document.getElementById('esewa-payment-button');
+        if (!esewaButton) return;
+
+        esewaButton.addEventListener('click', () => {
+            const totalAmount = calculateTotal();
+            if (totalAmount <= 0) {
+                alert("Cannot proceed with an empty cart.");
                 return;
             }
 
-            let subtotal = 0;
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-
-                const cartItemElement = document.createElement('div');
-                cartItemElement.className = 'cart-item';
-                cartItemElement.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="cart-item-details">
-                        <h3>${item.name}</h3>
-                        <p>Price: Rs. ${item.price.toFixed(2)}</p>
-                    </div>
-                    <div class="cart-item-actions">
-                        <input type="number" value="${item.quantity}" min="1" class="item-quantity" data-product-id="${item.id}">
-                        <p>Total: Rs. ${itemTotal.toFixed(2)}</p>
-                        <button class="remove-item-btn" data-product-id="${item.id}">×</button>
-                    </div>
-                `;
-                cartItemsContainer.appendChild(cartItemElement);
-            });
+            // 1. Generate a unique transaction UUID
+            const transactionUUID = `accessorize-me-${Date.now()}`;
             
-            // Calculate final total
-            const deliveryCharge = 100;
-            const totalAmount = subtotal + deliveryCharge;
+            // 2. Define Success and Failure URLs. These must be live URLs in production.
+            // For local testing, use the URLs provided by your local server (e.g., Live Server)
+            const successUrl = `${window.location.origin}/success.html`;
+            const failureUrl = `${window.location.origin}/failure.html`;
+            
+            // 3. Generate the Signature (as per eSewa documentation)
+            const secret = "8gBm/:&EnhH.1/q"; // This is the eSewa TEST secret key.
+            const dataToSign = `total_amount=${totalAmount},transaction_uuid=${transactionUUID},product_code=EPAYTEST`;
+            
+            const signature = CryptoJS.HmacSHA256(dataToSign, secret).toString(CryptoJS.enc.Base64);
 
-            // Display Summary and Checkout Button
-            cartSummaryContainer.innerHTML = `
-                <h2>Cart Summary</h2>
-                <p>Subtotal: <span>Rs. ${subtotal.toFixed(2)}</span></p>
-                <p>Delivery Charge: <span>Rs. ${deliveryCharge.toFixed(2)}</span></p>
-                <hr style="margin: 10px 0;">
-                <p><strong>Grand Total:</strong> <span><strong>Rs. ${totalAmount.toFixed(2)}</strong></span></p>
-                <button id="checkout-btn" class="cta-button">Pay with eSewa</button>
-            `;
+            // 4. Populate the hidden form fields
+            document.getElementById('total_amount').value = totalAmount;
+            document.getElementById('amount').value = totalAmount;
+            document.getElementById('transaction_uuid').value = transactionUUID;
+            document.getElementById('signature').value = signature;
+            document.getElementById('success_url').value = successUrl;
+            document.getElementById('failure_url').value = failureUrl;
 
-            // Add Event Listeners for cart actions
-            cartItemsContainer.querySelectorAll('.remove-item-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    removeFromCart(parseInt(e.target.dataset.productId));
-                });
-            });
-
-            cartItemsContainer.querySelectorAll('.item-quantity').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    updateQuantity(parseInt(e.target.dataset.productId), e.target.value);
-                });
-            });
-
-            document.getElementById('checkout-btn').addEventListener('click', () => {
-                handleEsewaPayment(totalAmount, subtotal, deliveryCharge);
-            });
-        }
-        
-        displayCartItems(); // Initial display
-    }
-
-    // --- Contact Page Logic (contact.html) - Kept from your original code ---
-    if (currentPage === 'contact.html') {
-        const contactForm = document.getElementById('contact-form');
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const message = document.getElementById('message').value;
-
-                if (name && email && message) {
-                    alert(`Thank you for your message, ${name}!\nWe will get back to you soon.\n(This is a demo submission)`);
-                    contactForm.reset();
-                } else {
-                    alert('Please fill in all fields.');
-                }
-            });
-        }
-        // Embed Google Map (Kept from your original code)
-        const mapContainer = document.getElementById('map-container');
-        if (mapContainer) {
-            mapContainer.innerHTML = `
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14055.48894121503!2d83.9734185871582!3d28.241513200000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399595f4e6f2f331%3A0x676b79f67a2bd8f7!2sGharipatan%2C%20Pokhara%2033700!5e0!3m2!1sen!2snp!4v1672902345678"
-                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>`;
-        }
-    }
+            // 5. Submit the form to redirect the user to eSewa's payment page
+            document.getElementById('esewa-form').submit();
+        });
+    };
     
-    // --- Success Page Logic (success.html) - NEW ---
-    if (currentPage === 'success.html') {
-        const urlParams = new URLSearchParams(window.location.search);
-        const transactionId = urlParams.get('oid'); // eSewa returns order ID as 'oid'
-        const transactionRefId = url.get('refId'); // eSewa also returns a reference ID
-
-        if (transactionId) {
-            document.getElementById('transaction-id').textContent = transactionRefId || 'N/A';
+    // --- GLOBAL EVENT LISTENERS ---
+    document.body.addEventListener('click', (event) => {
+        const target = event.target;
+        // Add to cart from both index.html and products.html
+        if (target.classList.contains('add-to-cart-btn')) {
+            const productCard = target.closest('.product-card');
+            if (productCard) {
+                const product = getProductFromCard(productCard);
+                if (product) {
+                    addToCart(product.id);
+                }
+            }
         }
-
-        // Clear the cart after a successful purchase
-        cart = [];
-        saveCart(); // This will save an empty array to localStorage and update the icon
-    }
-
-
-    // ===============================================
-    // --- ESEWA PAYMENT FUNCTIONALITY - NEW ---
-    // ===============================================
-
-    function handleEsewaPayment(total, subtotal, delivery) {
-        // IMPORTANT: Use your actual merchant code in a live environment.
-        const esewaMerchantCode = "epay_payment"; // This is eSewa's test merchant code.
-        
-        // Generate a unique product ID for the transaction
-        const transactionUUID = `accessorize-me-${new Date().getTime()}`;
-
-        const params = {
-            "amt": subtotal,
-            "psc": 0, // Product Service Charge
-            "pdc": delivery, // Product Delivery Charge
-            "txAmt": 0, // Tax amount
-            "tAmt": total,
-            "pid": transactionUUID,
-            "scd": esewaMerchantCode,
-            // IMPORTANT: Replace with your actual domain in a live environment
-            // Using 127.0.0.1 for Live Server development
-            "su": "http://127.0.0.1:5500/success.html", // Success URL
-            "fu": "http://127.0.0.1:5500/failure.html"  // Failure URL
-        };
-
-        // Create a form dynamically and submit it to eSewa
-        const form = document.createElement('form');
-        form.setAttribute("method", "POST");
-        // Use the UAT (testing) URL. For a live site, use https://epay.esewa.com.np/epay/main
-        form.setAttribute("action", "https://esewa.com.np/epay/main"); 
-        
-        for (const key in params) {
-            const hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
-            form.appendChild(hiddenField);
+        // Remove from cart
+        if (target.classList.contains('remove-btn')) {
+            const productId = parseInt(target.dataset.id);
+            removeFromCart(productId);
         }
+    });
 
-        document.body.appendChild(form);
-       // form.submit();
+    // --- INITIALIZE SCRIPT BASED ON CURRENT PAGE ---
+    updateCartCount();
 
-       // Simulate successful payment with fake transaction ID
-window.location.href = `success.html?oid=${transactionUUID}&refId=MOCK12345`;
-
+    const path = window.location.pathname;
+    if (path.includes('products.html')) {
+        renderProductsPage();
     }
-
-
-    // --- Initialize Cart Icon on all pages on load ---
-    updateCartIcon();
-
- 
+    if (path.includes('cart.html')) {
+        renderCartPage();
+    }
+    if (path.includes('checkout.html')) {
+        renderCheckoutPage();
+        handleEsewaPayment();
+    }
 });
