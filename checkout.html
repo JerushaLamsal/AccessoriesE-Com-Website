@@ -21,36 +21,76 @@
         </div>
     </header>
 
-    <main>
-        <div class="container checkout-container">
-            <h1 class="page-title">Review Your Order</h1>
+   <main>
+    <div class="container checkout-container">
+        <h1 class="page-title">Review Your Order</h1>
 
-            <!-- Order Summary will be loaded here by JavaScript -->
-            <div id="order-summary-container" class="order-summary"></div>
+        <div class="checkout-flex">
 
-            <!-- eSewa Payment Section -->
-            <div class="payment-section">
-                <h2>Pay With eSewa</h2>
+            <!-- Customer Information Form -->
+            <form id="customer-form" class="customer-form">
+                <h2>Customer Info</h2>
+
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" name="full-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="98XXXXXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label for="street-address">Street Address</label>
+                    <input type="text" id="street-address" name="street-address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+            </form>
+
+            <!-- Order Summary and Payment -->
+            <div class="order-payment-section">
                 
-                <!-- This form will be submitted to eSewa. It's hidden from the user. -->
-                <form id="esewa-form" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" style="display: none;">
-                    <input type="text" id="amount" name="amount" required>
-                    <input type="text" id="tax_amount" name="tax_amount" value="0" required>
-                    <input type="text" id="total_amount" name="total_amount" required>
-                    <input type="text" id="transaction_uuid" name="transaction_uuid" required>
-                    <input type="text" id="product_code" name="product_code" value="EPAYTEST" required>
-                    <input type="text" id="product_service_charge" name="product_service_charge" value="0" required>
-                    <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
-                    <input type="text" id="success_url" name="success_url" required>
-                    <input type="text" id="failure_url" name="failure_url" required>
-                    <input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
-                    <input type="text" id="signature" name="signature" required>
-                </form>
-                
-                <button id="esewa-payment-button" class="cta-button esewa-button">Pay with eSewa</button>
+                <!-- Order Summary -->
+                <div id="order-summary-container" class="order-summary">
+                    <h2>Order Summary</h2>
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- eSewa Payment Section -->
+                <div class="payment-section">
+                    <form id="esewa-form" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" style="display: none;">
+                        <input type="text" id="amount" name="amount" required>
+                        <input type="text" id="tax_amount" name="tax_amount" value="0" required>
+                        <input type="text" id="total_amount" name="total_amount" required>
+                        <input type="text" id="transaction_uuid" name="transaction_uuid" required>
+                        <input type="text" id="product_code" name="product_code" value="EPAYTEST" required>
+                        <input type="text" id="product_service_charge" name="product_service_charge" value="0" required>
+                        <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
+                        <input type="text" id="success_url" name="success_url" required>
+                        <input type="text" id="failure_url" name="failure_url" required>
+                        <input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
+                        <input type="text" id="signature" name="signature" required>
+                    </form>
+
+                    <button id="esewa-payment-button" class="cta-button esewa-button">
+                        Pay with eSewa
+                    </button>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
+
 
     <footer>
         <div class="container">
@@ -60,6 +100,34 @@
     
     <!-- CryptoJS is required by eSewa's process to generate the signature -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script>
+document.getElementById('esewa-payment-button').addEventListener('click', function (e) {
+    const form = document.getElementById('customer-form');
+    const inputs = form.querySelectorAll('input');
+    const message = document.getElementById('form-message');
+    let allFilled = true;
+
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            allFilled = false;
+            input.style.border = '1px solid red'; // highlight empty
+        } else {
+            input.style.border = '1px solid #ccc'; // reset if filled
+        }
+    });
+
+    if (!allFilled) {
+        e.preventDefault();
+        message.style.display = 'block'; // show message
+        return;
+    }
+
+    // Hide message and submit eSewa form
+    message.style.display = 'none';
+    document.getElementById('esewa-form').submit();
+});
+</script>
+
     <script src="js/main.js"></script>
 </body>
 </html>
